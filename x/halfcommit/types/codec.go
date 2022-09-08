@@ -9,12 +9,16 @@ import (
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgCreateHalfcommit{}, "halfcommit/CreateHalfcommit", nil)
+	cdc.RegisterConcrete(&MsgWithdrawTimelock{}, "halfcommit/WithdrawTimelock", nil)
 	// this line is used by starport scaffolding # 2
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgCreateHalfcommit{},
+	)
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgWithdrawTimelock{},
 	)
 	// this line is used by starport scaffolding # 3
 

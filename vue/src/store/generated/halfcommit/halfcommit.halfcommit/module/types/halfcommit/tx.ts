@@ -19,6 +19,14 @@ export interface MsgCreateHalfcommitResponse {
   index: string;
 }
 
+export interface MsgWithdrawTimelock {
+  creator: string;
+  to: string;
+  index: string;
+}
+
+export interface MsgWithdrawTimelockResponse {}
+
 const baseMsgCreateHalfcommit: object = {
   creator: "",
   from: "",
@@ -257,12 +265,159 @@ export const MsgCreateHalfcommitResponse = {
   },
 };
 
+const baseMsgWithdrawTimelock: object = { creator: "", to: "", index: "" };
+
+export const MsgWithdrawTimelock = {
+  encode(
+    message: MsgWithdrawTimelock,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.to !== "") {
+      writer.uint32(18).string(message.to);
+    }
+    if (message.index !== "") {
+      writer.uint32(26).string(message.index);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgWithdrawTimelock {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgWithdrawTimelock } as MsgWithdrawTimelock;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.to = reader.string();
+          break;
+        case 3:
+          message.index = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgWithdrawTimelock {
+    const message = { ...baseMsgWithdrawTimelock } as MsgWithdrawTimelock;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.to !== undefined && object.to !== null) {
+      message.to = String(object.to);
+    } else {
+      message.to = "";
+    }
+    if (object.index !== undefined && object.index !== null) {
+      message.index = String(object.index);
+    } else {
+      message.index = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgWithdrawTimelock): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.to !== undefined && (obj.to = message.to);
+    message.index !== undefined && (obj.index = message.index);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgWithdrawTimelock>): MsgWithdrawTimelock {
+    const message = { ...baseMsgWithdrawTimelock } as MsgWithdrawTimelock;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.to !== undefined && object.to !== null) {
+      message.to = object.to;
+    } else {
+      message.to = "";
+    }
+    if (object.index !== undefined && object.index !== null) {
+      message.index = object.index;
+    } else {
+      message.index = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgWithdrawTimelockResponse: object = {};
+
+export const MsgWithdrawTimelockResponse = {
+  encode(
+    _: MsgWithdrawTimelockResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): MsgWithdrawTimelockResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseMsgWithdrawTimelockResponse,
+    } as MsgWithdrawTimelockResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgWithdrawTimelockResponse {
+    const message = {
+      ...baseMsgWithdrawTimelockResponse,
+    } as MsgWithdrawTimelockResponse;
+    return message;
+  },
+
+  toJSON(_: MsgWithdrawTimelockResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(
+    _: DeepPartial<MsgWithdrawTimelockResponse>
+  ): MsgWithdrawTimelockResponse {
+    const message = {
+      ...baseMsgWithdrawTimelockResponse,
+    } as MsgWithdrawTimelockResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   CreateHalfcommit(
     request: MsgCreateHalfcommit
   ): Promise<MsgCreateHalfcommitResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  WithdrawTimelock(
+    request: MsgWithdrawTimelock
+  ): Promise<MsgWithdrawTimelockResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -281,6 +436,20 @@ export class MsgClientImpl implements Msg {
     );
     return promise.then((data) =>
       MsgCreateHalfcommitResponse.decode(new Reader(data))
+    );
+  }
+
+  WithdrawTimelock(
+    request: MsgWithdrawTimelock
+  ): Promise<MsgWithdrawTimelockResponse> {
+    const data = MsgWithdrawTimelock.encode(request).finish();
+    const promise = this.rpc.request(
+      "halfcommit.halfcommit.Msg",
+      "WithdrawTimelock",
+      data
+    );
+    return promise.then((data) =>
+      MsgWithdrawTimelockResponse.decode(new Reader(data))
     );
   }
 }

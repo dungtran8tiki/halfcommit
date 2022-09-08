@@ -32,6 +32,8 @@ export interface HalfcommitMsgCreateHalfcommitResponse {
   index?: string;
 }
 
+export type HalfcommitMsgWithdrawTimelockResponse = object;
+
 /**
  * Params defines the parameters for the module.
  */

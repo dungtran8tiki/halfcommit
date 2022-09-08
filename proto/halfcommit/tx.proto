@@ -10,6 +10,7 @@ option go_package = "halfcommit/x/halfcommit/types";
 // Msg defines the Msg service.
 service Msg {
       rpc CreateHalfcommit(MsgCreateHalfcommit) returns (MsgCreateHalfcommitResponse);
+  rpc WithdrawTimelock(MsgWithdrawTimelock) returns (MsgWithdrawTimelockResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -25,6 +26,15 @@ message MsgCreateHalfcommit {
 
 message MsgCreateHalfcommitResponse {
   string index = 1;
+}
+
+message MsgWithdrawTimelock {
+  string creator = 1;
+  string to = 2;
+  string index = 3;
+}
+
+message MsgWithdrawTimelockResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

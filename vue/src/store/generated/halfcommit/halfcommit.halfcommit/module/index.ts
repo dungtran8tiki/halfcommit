@@ -4,10 +4,12 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
+import { MsgWithdrawTimelock } from "./types/halfcommit/tx";
 import { MsgCreateHalfcommit } from "./types/halfcommit/tx";
 
 
 const types = [
+  ["/halfcommit.halfcommit.MsgWithdrawTimelock", MsgWithdrawTimelock],
   ["/halfcommit.halfcommit.MsgCreateHalfcommit", MsgCreateHalfcommit],
   
 ];
@@ -41,6 +43,7 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
+    msgWithdrawTimelock: (data: MsgWithdrawTimelock): EncodeObject => ({ typeUrl: "/halfcommit.halfcommit.MsgWithdrawTimelock", value: MsgWithdrawTimelock.fromPartial( data ) }),
     msgCreateHalfcommit: (data: MsgCreateHalfcommit): EncodeObject => ({ typeUrl: "/halfcommit.halfcommit.MsgCreateHalfcommit", value: MsgCreateHalfcommit.fromPartial( data ) }),
     
   };

@@ -68968,6 +68968,8 @@ definitions:
     properties:
       index:
         type: string
+  halfcommit.halfcommit.MsgWithdrawTimelockResponse:
+    type: object
   halfcommit.halfcommit.Params:
     type: object
     description: Params defines the parameters for the module.
