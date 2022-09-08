@@ -1,13 +1,30 @@
 syntax = "proto3";
 package halfcommit.halfcommit;
 
+import "cosmos/base/v1beta1/coin.proto";
+
 // this line is used by starport scaffolding # proto/tx/import
 
 option go_package = "halfcommit/x/halfcommit/types";
 
 // Msg defines the Msg service.
 service Msg {
-    // this line is used by starport scaffolding # proto/tx/rpc
+      rpc CreateHalfcommit(MsgCreateHalfcommit) returns (MsgCreateHalfcommitResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgCreateHalfcommit {
+  string creator = 1;
+  string from = 2;
+  string toTimelock = 3;
+  uint64 blockheight = 4;
+  string toHashlock = 5;
+  string hashcode = 6;
+  cosmos.base.v1beta1.Coin coin = 7;
+}
+
+message MsgCreateHalfcommitResponse {
+  string index = 1;
 }
 
 // this line is used by starport scaffolding # proto/tx/message
