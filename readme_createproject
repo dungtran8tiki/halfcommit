@@ -1,0 +1,29 @@
+Halfcommit project
+
+// IGNITE
+ignite scaffold chain halfcommit --no-module
+cd halfcommit
+ignite scaffold module halfcommit --dep bank
+ignite chain build
+
+ignite scaffold message create-halfcommit from to_timelock blockheight to_hashlock hashcode coin
+
+ignite scaffold map halfcommit from to_timelock to_hashlock amount blockheight hashcode  --no-message
+—> Edit  proto/halfcommit/tx.proto
+message MsgSendCoinResponse {
+  string index = 1;
+}
+ignite generate proto-go
+
+ignite scaffold message withdraw-timelock to index
+ignite scaffold message withdraw-hashlock to index secret
+
+halfcommitd tx halfcommit create-halfcommit cosmos1ze2hq5x2taheek02gfmg96jejzc0z2t92wmjzr cosmos1n8064lflvsw79u3e6f49alx72ekwhdmqqzdfhz 150 cosmos1cwx72k9e46mqczrp0hms2jsfzkmyaulth8wvm9 iNQmb9TmM40TuEX88olXnSCciXgjuSF9o+Fhk28DFYk=   80000stake
+
+halftimelockd query halfcommit  list-halfcommit
+
+halfcommitd tx halfcommit withdraw-timelock cosmos1n8064lflvsw79u3e6f49alx72ekwhdmqqzdfhz   cosmos1ze2hq5x2taheek02gfmg96jejzc0z2t92wmjzr:iNQmb9TmM40TuEX88olXnSCciXgjuSF9o+Fhk28DFYk=:stake:80000:1456
+
+halfcommitd tx halfcommit withdraw-hashlock cosmos1cwx72k9e46mqczrp0hms2jsfzkmyaulth8wvm9   cosmos1ze2hq5x2taheek02gfmg96jejzc0z2t92wmjzr:iNQmb9TmM40TuEX88olXnSCciXgjuSF9o+Fhk28DFYk=:stake:80000:1456  abcd
+
+halfcommitd tx bank send cosmos1ze2hq5x2taheek02gfmg96jejzc0z2t92wmjzr cosmos1cwx72k9e46mqczrp0hms2jsfzkmyaulth8wvm9  20000stake
