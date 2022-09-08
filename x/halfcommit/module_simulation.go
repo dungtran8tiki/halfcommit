@@ -32,6 +32,10 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgWithdrawTimelock int = 100
 
+	opWeightMsgWithdrawHashlock = "op_weight_msg_withdraw_hashlock"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgWithdrawHashlock int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -86,6 +90,17 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgWithdrawTimelock,
 		halfcommitsimulation.SimulateMsgWithdrawTimelock(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgWithdrawHashlock int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgWithdrawHashlock, &weightMsgWithdrawHashlock, nil,
+		func(_ *rand.Rand) {
+			weightMsgWithdrawHashlock = defaultWeightMsgWithdrawHashlock
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgWithdrawHashlock,
+		halfcommitsimulation.SimulateMsgWithdrawHashlock(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

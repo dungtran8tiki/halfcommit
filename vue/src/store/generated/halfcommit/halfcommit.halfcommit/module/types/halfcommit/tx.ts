@@ -27,6 +27,15 @@ export interface MsgWithdrawTimelock {
 
 export interface MsgWithdrawTimelockResponse {}
 
+export interface MsgWithdrawHashlock {
+  creator: string;
+  to: string;
+  index: string;
+  secret: string;
+}
+
+export interface MsgWithdrawHashlockResponse {}
+
 const baseMsgCreateHalfcommit: object = {
   creator: "",
   from: "",
@@ -409,15 +418,184 @@ export const MsgWithdrawTimelockResponse = {
   },
 };
 
+const baseMsgWithdrawHashlock: object = {
+  creator: "",
+  to: "",
+  index: "",
+  secret: "",
+};
+
+export const MsgWithdrawHashlock = {
+  encode(
+    message: MsgWithdrawHashlock,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.to !== "") {
+      writer.uint32(18).string(message.to);
+    }
+    if (message.index !== "") {
+      writer.uint32(26).string(message.index);
+    }
+    if (message.secret !== "") {
+      writer.uint32(34).string(message.secret);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgWithdrawHashlock {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgWithdrawHashlock } as MsgWithdrawHashlock;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.to = reader.string();
+          break;
+        case 3:
+          message.index = reader.string();
+          break;
+        case 4:
+          message.secret = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgWithdrawHashlock {
+    const message = { ...baseMsgWithdrawHashlock } as MsgWithdrawHashlock;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.to !== undefined && object.to !== null) {
+      message.to = String(object.to);
+    } else {
+      message.to = "";
+    }
+    if (object.index !== undefined && object.index !== null) {
+      message.index = String(object.index);
+    } else {
+      message.index = "";
+    }
+    if (object.secret !== undefined && object.secret !== null) {
+      message.secret = String(object.secret);
+    } else {
+      message.secret = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgWithdrawHashlock): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.to !== undefined && (obj.to = message.to);
+    message.index !== undefined && (obj.index = message.index);
+    message.secret !== undefined && (obj.secret = message.secret);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgWithdrawHashlock>): MsgWithdrawHashlock {
+    const message = { ...baseMsgWithdrawHashlock } as MsgWithdrawHashlock;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.to !== undefined && object.to !== null) {
+      message.to = object.to;
+    } else {
+      message.to = "";
+    }
+    if (object.index !== undefined && object.index !== null) {
+      message.index = object.index;
+    } else {
+      message.index = "";
+    }
+    if (object.secret !== undefined && object.secret !== null) {
+      message.secret = object.secret;
+    } else {
+      message.secret = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgWithdrawHashlockResponse: object = {};
+
+export const MsgWithdrawHashlockResponse = {
+  encode(
+    _: MsgWithdrawHashlockResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): MsgWithdrawHashlockResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseMsgWithdrawHashlockResponse,
+    } as MsgWithdrawHashlockResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgWithdrawHashlockResponse {
+    const message = {
+      ...baseMsgWithdrawHashlockResponse,
+    } as MsgWithdrawHashlockResponse;
+    return message;
+  },
+
+  toJSON(_: MsgWithdrawHashlockResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(
+    _: DeepPartial<MsgWithdrawHashlockResponse>
+  ): MsgWithdrawHashlockResponse {
+    const message = {
+      ...baseMsgWithdrawHashlockResponse,
+    } as MsgWithdrawHashlockResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   CreateHalfcommit(
     request: MsgCreateHalfcommit
   ): Promise<MsgCreateHalfcommitResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   WithdrawTimelock(
     request: MsgWithdrawTimelock
   ): Promise<MsgWithdrawTimelockResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  WithdrawHashlock(
+    request: MsgWithdrawHashlock
+  ): Promise<MsgWithdrawHashlockResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -450,6 +628,20 @@ export class MsgClientImpl implements Msg {
     );
     return promise.then((data) =>
       MsgWithdrawTimelockResponse.decode(new Reader(data))
+    );
+  }
+
+  WithdrawHashlock(
+    request: MsgWithdrawHashlock
+  ): Promise<MsgWithdrawHashlockResponse> {
+    const data = MsgWithdrawHashlock.encode(request).finish();
+    const promise = this.rpc.request(
+      "halfcommit.halfcommit.Msg",
+      "WithdrawHashlock",
+      data
+    );
+    return promise.then((data) =>
+      MsgWithdrawHashlockResponse.decode(new Reader(data))
     );
   }
 }
