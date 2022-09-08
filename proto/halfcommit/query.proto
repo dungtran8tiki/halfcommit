@@ -5,6 +5,7 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "halfcommit/params.proto";
+import "halfcommit/halfcommit.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "halfcommit/x/halfcommit/types";
@@ -15,7 +16,17 @@ service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/halfcommit/halfcommit/params";
   }
-  // this line is used by starport scaffolding # 2
+  // Queries a Halfcommit by index.
+	rpc Halfcommit(QueryGetHalfcommitRequest) returns (QueryGetHalfcommitResponse) {
+		option (google.api.http).get = "/halfcommit/halfcommit/halfcommit/{index}";
+	}
+
+	// Queries a list of Halfcommit items.
+	rpc HalfcommitAll(QueryAllHalfcommitRequest) returns (QueryAllHalfcommitResponse) {
+		option (google.api.http).get = "/halfcommit/halfcommit/halfcommit";
+	}
+
+// this line is used by starport scaffolding # 2
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -25,6 +36,24 @@ message QueryParamsRequest {}
 message QueryParamsResponse {
   // params holds all the parameters of this module.
   Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryGetHalfcommitRequest {
+	  string index = 1;
+
+}
+
+message QueryGetHalfcommitResponse {
+	Halfcommit halfcommit = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllHalfcommitRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllHalfcommitResponse {
+	repeated Halfcommit halfcommit = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // this line is used by starport scaffolding # 3

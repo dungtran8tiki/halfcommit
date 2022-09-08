@@ -31,16 +31,18 @@ func (k msgServer) CreateHalfcommit(goCtx context.Context, msg *types.MsgCreateH
 
 	indexStr := fmt.Sprintf("%s:%s:%s:%d:%d", msg.From, msg.Hashcode, msg.Coin.Denom, msg.Coin.Amount.Int64(), ctx.BlockHeight())
 
-	//unlockBlock := msg.Blockheight + uint64(ctx.BlockHeight())
+	unlockBlock := msg.Blockheight + uint64(ctx.BlockHeight())
 
-	//timeLock := types.Timelock{
-	//	Index:       indexStr,
-	//	From:        msg.Sender,
-	//	To:          msg.Receiver,
-	//	Amount:      msg.Amount,
-	//	BlockHeight: unlockBlock,
-	//}
-	//k.Keeper.SetTimelock(ctx, timeLock)
+	halfcommit := types.Halfcommit{
+		Index:       indexStr,
+		From:        msg.From,
+		ToTimelock:  msg.ToTimelock,
+		ToHashlock:  msg.ToHashlock,
+		Amount:      msg.Coin,
+		Blockheight: unlockBlock,
+		Hashcode:    msg.Hashcode,
+	}
+	k.Keeper.SetHalfcommit(ctx, halfcommit)
 
 	if err != nil {
 		return nil, err

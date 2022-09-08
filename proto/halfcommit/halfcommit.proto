@@ -1,0 +1,18 @@
+syntax = "proto3";
+package halfcommit.halfcommit;
+
+import "cosmos/base/v1beta1/coin.proto";
+
+option go_package = "halfcommit/x/halfcommit/types";
+
+message Halfcommit {
+  string index = 1; 
+  string from = 2; 
+  string toTimelock = 3; 
+  string toHashlock = 4;
+  cosmos.base.v1beta1.Coin amount = 5;
+  uint64 blockheight = 6;
+  string hashcode = 7; 
+  
+}
+
