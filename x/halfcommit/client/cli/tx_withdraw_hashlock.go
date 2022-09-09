@@ -29,7 +29,7 @@ func CmdWithdrawHashlock() *cobra.Command {
 			}
 
 			msg := types.NewMsgWithdrawHashlock(
-				clientCtx.GetFromAddress().String(),
+				argTo,
 				argTo,
 				argIndex,
 				argSecret,
