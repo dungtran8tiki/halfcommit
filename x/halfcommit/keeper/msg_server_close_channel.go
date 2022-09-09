@@ -2,8 +2,6 @@ package keeper
 
 import (
 	"context"
-	"github.com/armon/go-metrics"
-	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -17,7 +15,7 @@ func (k msgServer) CloseChannel(goCtx context.Context, msg *types.MsgCloseChanne
 
 	// TODO: Handling the message
 
-	if err := k.IsSendEnabledCoins(ctx, msg.CoinA...); err != nil {
+	if err := k.bankKeeper.IsSendEnabledCoins(ctx, *msg.CoinA); err != nil {
 		return nil, err
 	}
 
@@ -34,24 +32,25 @@ func (k msgServer) CloseChannel(goCtx context.Context, msg *types.MsgCloseChanne
 		return nil, err
 	}
 
-	if k.BlockedAddr(toA) {
+	if k.bankKeeper.BlockedAddr(toA) {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "%s is not allowed to receive funds", msg.ToA)
 	}
-	if k.BlockedAddr(toB) {
+	if k.bankKeeper.BlockedAddr(toB) {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "%s is not allowed to receive funds", msg.ToB)
 	}
 
-	err = k.SendCoins(ctx, from, toA, msg.CoinA)
+	err = k.bankKeeper.SendCoins(ctx, from, toA, sdk.Coins{*msg.CoinA})
 	if err != nil {
 		return nil, err
 	}
 
-	err = k.SendCoins(ctx, from, toB, msg.CoinB)
+	err = k.bankKeeper.SendCoins(ctx, from, toB, sdk.Coins{*msg.CoinB})
 	if err != nil {
 		return nil, err
 	}
 
-	defer func() {
+	//Telemtrics and event is temporary commetns
+	/*defer func() {
 		for _, a := range msg.CoinA {
 			if a.CoinA.IsInt64() {
 				telemetry.SetGaugeWithLabels(
@@ -69,6 +68,6 @@ func (k msgServer) CloseChannel(goCtx context.Context, msg *types.MsgCloseChanne
 			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
 		),
 	)
-
+	*/
 	return &types.MsgCloseChannelResponse{}, nil
 }

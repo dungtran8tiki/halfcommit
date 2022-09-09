@@ -40,9 +40,9 @@ export interface MsgCloseChannel {
   creator: string;
   from: string;
   toA: string;
-  coinA: string;
+  coinA: Coin | undefined;
   toB: string;
-  coinB: string;
+  coinB: Coin | undefined;
 }
 
 export interface MsgCloseChannelResponse {}
@@ -595,14 +595,7 @@ export const MsgWithdrawHashlockResponse = {
   },
 };
 
-const baseMsgCloseChannel: object = {
-  creator: "",
-  from: "",
-  toA: "",
-  coinA: "",
-  toB: "",
-  coinB: "",
-};
+const baseMsgCloseChannel: object = { creator: "", from: "", toA: "", toB: "" };
 
 export const MsgCloseChannel = {
   encode(message: MsgCloseChannel, writer: Writer = Writer.create()): Writer {
@@ -615,14 +608,14 @@ export const MsgCloseChannel = {
     if (message.toA !== "") {
       writer.uint32(26).string(message.toA);
     }
-    if (message.coinA !== "") {
-      writer.uint32(34).string(message.coinA);
+    if (message.coinA !== undefined) {
+      Coin.encode(message.coinA, writer.uint32(34).fork()).ldelim();
     }
     if (message.toB !== "") {
       writer.uint32(42).string(message.toB);
     }
-    if (message.coinB !== "") {
-      writer.uint32(50).string(message.coinB);
+    if (message.coinB !== undefined) {
+      Coin.encode(message.coinB, writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -644,13 +637,13 @@ export const MsgCloseChannel = {
           message.toA = reader.string();
           break;
         case 4:
-          message.coinA = reader.string();
+          message.coinA = Coin.decode(reader, reader.uint32());
           break;
         case 5:
           message.toB = reader.string();
           break;
         case 6:
-          message.coinB = reader.string();
+          message.coinB = Coin.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -678,9 +671,9 @@ export const MsgCloseChannel = {
       message.toA = "";
     }
     if (object.coinA !== undefined && object.coinA !== null) {
-      message.coinA = String(object.coinA);
+      message.coinA = Coin.fromJSON(object.coinA);
     } else {
-      message.coinA = "";
+      message.coinA = undefined;
     }
     if (object.toB !== undefined && object.toB !== null) {
       message.toB = String(object.toB);
@@ -688,9 +681,9 @@ export const MsgCloseChannel = {
       message.toB = "";
     }
     if (object.coinB !== undefined && object.coinB !== null) {
-      message.coinB = String(object.coinB);
+      message.coinB = Coin.fromJSON(object.coinB);
     } else {
-      message.coinB = "";
+      message.coinB = undefined;
     }
     return message;
   },
@@ -700,9 +693,11 @@ export const MsgCloseChannel = {
     message.creator !== undefined && (obj.creator = message.creator);
     message.from !== undefined && (obj.from = message.from);
     message.toA !== undefined && (obj.toA = message.toA);
-    message.coinA !== undefined && (obj.coinA = message.coinA);
+    message.coinA !== undefined &&
+      (obj.coinA = message.coinA ? Coin.toJSON(message.coinA) : undefined);
     message.toB !== undefined && (obj.toB = message.toB);
-    message.coinB !== undefined && (obj.coinB = message.coinB);
+    message.coinB !== undefined &&
+      (obj.coinB = message.coinB ? Coin.toJSON(message.coinB) : undefined);
     return obj;
   },
 
@@ -724,9 +719,9 @@ export const MsgCloseChannel = {
       message.toA = "";
     }
     if (object.coinA !== undefined && object.coinA !== null) {
-      message.coinA = object.coinA;
+      message.coinA = Coin.fromPartial(object.coinA);
     } else {
-      message.coinA = "";
+      message.coinA = undefined;
     }
     if (object.toB !== undefined && object.toB !== null) {
       message.toB = object.toB;
@@ -734,9 +729,9 @@ export const MsgCloseChannel = {
       message.toB = "";
     }
     if (object.coinB !== undefined && object.coinB !== null) {
-      message.coinB = object.coinB;
+      message.coinB = Coin.fromPartial(object.coinB);
     } else {
-      message.coinB = "";
+      message.coinB = undefined;
     }
     return message;
   },
