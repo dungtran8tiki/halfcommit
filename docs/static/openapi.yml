@@ -68963,6 +68963,8 @@ definitions:
         format: uint64
       hashcode:
         type: string
+  halfcommit.halfcommit.MsgCloseChannelResponse:
+    type: object
   halfcommit.halfcommit.MsgCreateHalfcommitResponse:
     type: object
     properties:

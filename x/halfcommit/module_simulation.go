@@ -36,6 +36,10 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgWithdrawHashlock int = 100
 
+	opWeightMsgCloseChannel = "op_weight_msg_close_channel"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgCloseChannel int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -101,6 +105,17 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgWithdrawHashlock,
 		halfcommitsimulation.SimulateMsgWithdrawHashlock(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgCloseChannel int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCloseChannel, &weightMsgCloseChannel, nil,
+		func(_ *rand.Rand) {
+			weightMsgCloseChannel = defaultWeightMsgCloseChannel
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgCloseChannel,
+		halfcommitsimulation.SimulateMsgCloseChannel(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

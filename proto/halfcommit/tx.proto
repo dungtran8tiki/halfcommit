@@ -12,6 +12,7 @@ service Msg {
       rpc CreateHalfcommit(MsgCreateHalfcommit) returns (MsgCreateHalfcommitResponse);
   rpc WithdrawTimelock(MsgWithdrawTimelock) returns (MsgWithdrawTimelockResponse);
   rpc WithdrawHashlock(MsgWithdrawHashlock) returns (MsgWithdrawHashlockResponse);
+  rpc CloseChannel(MsgCloseChannel) returns (MsgCloseChannelResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -46,6 +47,18 @@ message MsgWithdrawHashlock {
 }
 
 message MsgWithdrawHashlockResponse {
+}
+
+message MsgCloseChannel {
+  string creator = 1;
+  string from = 2;
+  string toA = 3;
+  cosmos.base.v1beta1.Coin coinA = 4;
+  string toB = 5;
+  cosmos.base.v1beta1.Coin coinB = 6;
+}
+
+message MsgCloseChannelResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

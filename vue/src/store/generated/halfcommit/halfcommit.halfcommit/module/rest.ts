@@ -28,6 +28,8 @@ export interface HalfcommitHalfcommit {
   hashcode?: string;
 }
 
+export type HalfcommitMsgCloseChannelResponse = object;
+
 export interface HalfcommitMsgCreateHalfcommitResponse {
   index?: string;
 }
