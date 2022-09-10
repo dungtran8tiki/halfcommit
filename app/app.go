@@ -493,6 +493,7 @@ func New(
 		app.GetSubspace(halfcommitmoduletypes.ModuleName),
 
 		app.BankKeeper,
+		app.AccountKeeper,
 	)
 	halfcommitModule := halfcommitmodule.NewAppModule(appCodec, app.HalfcommitKeeper, app.AccountKeeper, app.BankKeeper)
 

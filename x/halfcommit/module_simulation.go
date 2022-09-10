@@ -40,6 +40,10 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgCloseChannel int = 100
 
+	opWeightMsgOpenChannel = "op_weight_msg_open_channel"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgOpenChannel int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -116,6 +120,17 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgCloseChannel,
 		halfcommitsimulation.SimulateMsgCloseChannel(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgOpenChannel int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgOpenChannel, &weightMsgOpenChannel, nil,
+		func(_ *rand.Rand) {
+			weightMsgOpenChannel = defaultWeightMsgOpenChannel
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgOpenChannel,
+		halfcommitsimulation.SimulateMsgOpenChannel(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

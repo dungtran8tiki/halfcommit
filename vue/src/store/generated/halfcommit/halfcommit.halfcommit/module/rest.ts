@@ -34,6 +34,8 @@ export interface HalfcommitMsgCreateHalfcommitResponse {
   index?: string;
 }
 
+export type HalfcommitMsgOpenChannelResponse = object;
+
 export type HalfcommitMsgWithdrawHashlockResponse = object;
 
 export type HalfcommitMsgWithdrawTimelockResponse = object;

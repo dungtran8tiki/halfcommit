@@ -4,17 +4,19 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
-import { MsgCreateHalfcommit } from "./types/halfcommit/tx";
-import { MsgWithdrawTimelock } from "./types/halfcommit/tx";
-import { MsgCloseChannel } from "./types/halfcommit/tx";
 import { MsgWithdrawHashlock } from "./types/halfcommit/tx";
+import { MsgCreateHalfcommit } from "./types/halfcommit/tx";
+import { MsgCloseChannel } from "./types/halfcommit/tx";
+import { MsgOpenChannel } from "./types/halfcommit/tx";
+import { MsgWithdrawTimelock } from "./types/halfcommit/tx";
 
 
 const types = [
-  ["/halfcommit.halfcommit.MsgCreateHalfcommit", MsgCreateHalfcommit],
-  ["/halfcommit.halfcommit.MsgWithdrawTimelock", MsgWithdrawTimelock],
-  ["/halfcommit.halfcommit.MsgCloseChannel", MsgCloseChannel],
   ["/halfcommit.halfcommit.MsgWithdrawHashlock", MsgWithdrawHashlock],
+  ["/halfcommit.halfcommit.MsgCreateHalfcommit", MsgCreateHalfcommit],
+  ["/halfcommit.halfcommit.MsgCloseChannel", MsgCloseChannel],
+  ["/halfcommit.halfcommit.MsgOpenChannel", MsgOpenChannel],
+  ["/halfcommit.halfcommit.MsgWithdrawTimelock", MsgWithdrawTimelock],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -47,10 +49,11 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
-    msgCreateHalfcommit: (data: MsgCreateHalfcommit): EncodeObject => ({ typeUrl: "/halfcommit.halfcommit.MsgCreateHalfcommit", value: MsgCreateHalfcommit.fromPartial( data ) }),
-    msgWithdrawTimelock: (data: MsgWithdrawTimelock): EncodeObject => ({ typeUrl: "/halfcommit.halfcommit.MsgWithdrawTimelock", value: MsgWithdrawTimelock.fromPartial( data ) }),
-    msgCloseChannel: (data: MsgCloseChannel): EncodeObject => ({ typeUrl: "/halfcommit.halfcommit.MsgCloseChannel", value: MsgCloseChannel.fromPartial( data ) }),
     msgWithdrawHashlock: (data: MsgWithdrawHashlock): EncodeObject => ({ typeUrl: "/halfcommit.halfcommit.MsgWithdrawHashlock", value: MsgWithdrawHashlock.fromPartial( data ) }),
+    msgCreateHalfcommit: (data: MsgCreateHalfcommit): EncodeObject => ({ typeUrl: "/halfcommit.halfcommit.MsgCreateHalfcommit", value: MsgCreateHalfcommit.fromPartial( data ) }),
+    msgCloseChannel: (data: MsgCloseChannel): EncodeObject => ({ typeUrl: "/halfcommit.halfcommit.MsgCloseChannel", value: MsgCloseChannel.fromPartial( data ) }),
+    msgOpenChannel: (data: MsgOpenChannel): EncodeObject => ({ typeUrl: "/halfcommit.halfcommit.MsgOpenChannel", value: MsgOpenChannel.fromPartial( data ) }),
+    msgWithdrawTimelock: (data: MsgWithdrawTimelock): EncodeObject => ({ typeUrl: "/halfcommit.halfcommit.MsgWithdrawTimelock", value: MsgWithdrawTimelock.fromPartial( data ) }),
     
   };
 };

@@ -34,6 +34,7 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(CmdWithdrawTimelock())
 	cmd.AddCommand(CmdWithdrawHashlock())
 	cmd.AddCommand(CmdCloseChannel())
+	cmd.AddCommand(CmdOpenChannel())
 	// this line is used by starport scaffolding # 1
 
 	return cmd

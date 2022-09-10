@@ -68970,6 +68970,8 @@ definitions:
     properties:
       index:
         type: string
+  halfcommit.halfcommit.MsgOpenChannelResponse:
+    type: object
   halfcommit.halfcommit.MsgWithdrawHashlockResponse:
     type: object
   halfcommit.halfcommit.MsgWithdrawTimelockResponse:

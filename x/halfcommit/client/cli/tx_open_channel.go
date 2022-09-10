@@ -14,31 +14,26 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdCloseChannel() *cobra.Command {
+func CmdOpenChannel() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "close-channel [from] [to-a] [coin-a] [to-b] [coin-b]",
-		Short: "Broadcast message close-channel",
+		Use:   "open-channel [part-a] [part-b] [coin-a] [coin-b] [name]",
+		Short: "Broadcast message open-channel",
 		Args:  cobra.ExactArgs(5),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argFrom := args[0]
-			argToA := args[1]
-			//argCoinA := args[2]
-			argToB := args[3]
-			//argCoinB := args[4]
-			_, err = sdk.AccAddressFromBech32(argFrom)
+			argPartA := args[0]
+			argPartB := args[1]
+
+			_, err = sdk.AccAddressFromBech32(argPartA)
 			if err != nil {
-				return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid from address (%s)", err)
+				return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid partA address (%s)", err)
 			}
 
-			_, err = sdk.AccAddressFromBech32(argToA)
+			_, err = sdk.AccAddressFromBech32(argPartB)
 			if err != nil {
-				return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid toA address (%s)", err)
+				return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid partB address (%s)", err)
 			}
 
-			_, err = sdk.AccAddressFromBech32(argToB)
-			if err != nil {
-				return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid toB address (%s)", err)
-			}
+			argName := args[4]
 
 			cmd.Flags().Set(flags.FlagFrom, args[0])
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -52,19 +47,19 @@ func CmdCloseChannel() *cobra.Command {
 			}
 			coinA, _ := sdk.NormalizeDecCoin(decCoin).TruncateDecimal()
 
-			decCoin, err = sdk.ParseDecCoin(args[4])
+			decCoin, err = sdk.ParseDecCoin(args[3])
 			if err != nil {
 				return err
 			}
 			coinB, _ := sdk.NormalizeDecCoin(decCoin).TruncateDecimal()
 
-			msg := types.NewMsgCloseChannel(
-				clientCtx.GetFromAddress().String(),
-				argFrom,
-				argToA,
+			msg := types.NewMsgOpenChannel(
+				argName,
+				argPartA,
+				argPartB,
 				&coinA,
-				argToB,
 				&coinB,
+				argName,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
